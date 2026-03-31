@@ -48,7 +48,9 @@ public class User {
     }
 
     public void stopTimer() {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
+        }
     }
 
     public void switchPlayer() {
@@ -69,5 +71,20 @@ public class User {
 
     public boolean isUser1Active() {
         return isUser1Active;
+    }
+
+    public long getTimeUser1() {
+        return timeUser1;
+    }
+
+    public long getTimeUser2() {
+        return timeUser2;
+    }
+
+    public void restoreState(long timeU1, long timeU2, boolean isU1Active) {
+        this.timeUser1 = timeU1;
+        this.timeUser2 = timeU2;
+        this.isUser1Active = isU1Active;
+        updateDisplay();
     }
 }

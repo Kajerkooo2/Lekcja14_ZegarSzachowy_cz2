@@ -11,6 +11,11 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     private boolean isGameRunning = false;
 
+    private static final String KEY_GAME_RUNNING = "isGameRunning";
+    private static final String KEY_TIME_USER1 = "timeUser1";
+    private static final String KEY_TIME_USER2 = "timeUser2";
+    private static final String KEY_ACTIVE_USER = "isUser1Active";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +25,18 @@ public class MainActivity extends AppCompatActivity {
         btnUser2 = findViewById(R.id.User2);
 
         user = new User(btnUser1, btnUser2);
+
+        if (savedInstanceState != null) {
+            isGameRunning = savedInstanceState.getBoolean(KEY_GAME_RUNNING);
+            user.restoreState(
+                    savedInstanceState.getLong(KEY_TIME_USER1),
+                    savedInstanceState.getLong(KEY_TIME_USER2),
+                    savedInstanceState.getBoolean(KEY_ACTIVE_USER)
+            );
+            if (isGameRunning) {
+                user.startTimer();
+            }
+        }
 
         btnUser1.setOnClickListener(v -> {
             if (!isGameRunning) {
@@ -40,5 +57,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        if (isGameRunning) {
+            user.stopTimer();
+        }
+
+        outState.putBoolean(KEY_GAME_RUNNING, isGameRunning);
+        outState.putLong(KEY_TIME_USER1, user.getTimeUser1());
+        outState.putLong(KEY_TIME_USER2, user.getTimeUser2());
+        outState.putBoolean(KEY_ACTIVE_USER, user.isUser1Active());
+    }
 }
